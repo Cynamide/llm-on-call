@@ -57,7 +57,7 @@ async def start_call(
     """
     # The voice callback URL should be a publicly accessible endpoint.
     # Update BASE_URL (e.g. using ngrok or your production domain) in your environment.
-    base_url = "https://ae0c-2603-6081-24f0-93b0-ec9f-77-3c83-f5d4.ngrok-free.app"
+    base_url = os.getenv("BASE_URL")
     voice_url = f"{base_url}/voice"
     
     try:
