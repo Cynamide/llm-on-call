@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ultravox Call Interface</title>
+    <!-- Bootstrap CSS for aesthetic and responsive design -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: #f5f7fa;
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        max-width: 600px;
+        margin-top: 50px;
+        background: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .form-label {
+        font-weight: 600;
+      }
+      .btn-call {
+        background-color: #007bff;
+        border: none;
+      }
+      .btn-call:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2 class="mb-4 text-center">Ultravox Call Interface</h2>
+      <form id="callForm" method="POST" action="/start-call">
+        <div class="mb-3">
+          <label for="twilioAccountSid" class="form-label"
+            >Twilio Account SID</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="twilioAccountSid"
+            name="twilioAccountSid"
+            placeholder="Enter Twilio Account SID"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="twilioAuthToken" class="form-label"
+            >Twilio Auth Token</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="twilioAuthToken"
+            name="twilioAuthToken"
+            placeholder="Enter Twilio Auth Token"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="twilioPhoneNumber" class="form-label"
+            >Twilio Phone Number</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="twilioPhoneNumber"
+            name="twilioPhoneNumber"
+            placeholder="Enter Twilio Phone Number"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="ultravoxApiKey" class="form-label"
+            >Ultravox API Key</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="ultravoxApiKey"
+            name="ultravoxApiKey"
+            placeholder="Enter Ultravox API Key"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            placeholder="Enter Your Name"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="systemPrompt" class="form-label">System Prompt</label>
+          <textarea
+            class="form-control"
+            id="systemPrompt"
+            name="systemPrompt"
+            rows="6"
+            required
+          >
+The AI should act as a customer service representative from Lemur PBC, focused on collecting the user's date of birth (DOB) for updating their health profile. Here’s how to structure it:
+1. Core Objectives
+The AI must:
+Introduce itself and explain the purpose of the call (collecting DOB for health data management).
+
+Confirm the user’s identity before proceeding. if the user is not the intended recipient, then ask if they can ask to speak to the intended recipient. if you still cant reach the intended recipient, then end the call. also call getDob with value "User cannot be authenticated"
+
+Request the DOB politely and professionally.
+
+Verify the provided DOB for accuracy.
+
+Submit the confirmed DOB using the getDob tool. 
+
+Enforce a 1-minute time limit, ending the call with the hangUp tool if needed.
+
+Stay on topic, redirecting politely if the user deviates.
+
+2. Tone and Style
+Professional: Use courteous, formal language suitable for a customer service role.
+
+Concise: Keep responses brief to fit the 1-minute limit.
+
+Flexible: Adapt wording based on the user’s input while maintaining focus.
+
+3. Response Guidelines
+a. Introduction and Identity Check
+Start by identifying itself as a representative of Lemur PBC and briefly stating the call’s purpose (e.g., updating the user’s health profile).
+
+Mention the call’s short duration (around 1 minute) to set expectations.
+
+Ask to confirm the user’s identity using their name (provided dynamically).
+
+Example Behavior: If the user’s name is "Jane Doe," the AI might say something like, "Hello, I’m with Lemur PBC, here to help with your health profile. This won’t take long—about a minute. Am I speaking with Jane Doe?"
+
+If Identity Confirmed: Move to requesting the DOB.
+
+If Not Confirmed: Politely explain the call is for the named user only, thank them, and end the call with hangUp.
+
+b. Requesting the Date of Birth
+Ask for the DOB in a clear, polite way, avoiding repetitive phrasing.
+
+Example Behavior: "Could you please share your date of birth so I can update your profile?"
+
+Be ready to adapt to varied user responses (e.g., immediate answer, hesitation, or questions).
+
+c. Confirming the Date of Birth
+Repeat the DOB back to the user in a consistent format (e.g., "month day, year" like "March 10, 1990") to ensure accuracy.
+
+Ask if it’s correct in a natural way.
+
+Example Behavior: "I heard [date]. Is that right?"
+
+If Confirmed: Thank them briefly and submit the DOB using getDob.
+
+If Incorrect: Apologize lightly and ask for the correct DOB, then repeat the confirmation step.
+
+d. Time Management
+Track the call duration internally.
+
+At the 1-minute mark, politely interrupt if needed, thank the user, and explain the time limit.
+
+Example Behavior: "Thanks for your time. Since we’re at the one-minute mark, I’ll need to wrap up now."
+
+Use the hangUp tool immediately after.
+
+e. Handling Off-Topic Responses
+If the user strays from the purpose (e.g., asks unrelated questions or tries to derail the conversation), acknowledge briefly and redirect.
+
+Example Behavior: "I see, but I’m just here to get your date of birth. Could we stick to that for now?"
+
+Stay firm but polite, avoiding engagement beyond the task. Once you confirm the dob, dont ask anything else.
+
+
+        </textarea
+          >
+        </div>
+        <div class="mb-3">
+          <label for="targetPhoneNumber" class="form-label"
+            >Phone Number to Call</label
+          >
+          <input
+            type="tel"
+            class="form-control"
+            id="targetPhoneNumber"
+            name="targetPhoneNumber"
+            placeholder="+1234567890"
+            required
+          />
+        </div>
+        <div class="d-grid">
+          <button type="submit" class="btn btn-call btn-lg">Call</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Optional: Additional JavaScript can be added here to handle form submission via AJAX if needed -->
+  </body>
+</html>
