@@ -35,10 +35,6 @@ async def create_ultravox_call(config: dict, api_key: str):
 
 @app.get("/")
 async def index():
-    """
-    Serves the HTML page for user input.
-    Ensure that the file 'index.html' is in the same directory as this script.
-    """
     return FileResponse("index.html")
 
 @app.post("/start-call")
